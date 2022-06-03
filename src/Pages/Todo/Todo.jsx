@@ -7,6 +7,8 @@ import "./Todo.scss";
 
 const Todo = () => {
     const [todos, setTodos] = useState([]);
+    const [edit, setEdit] = useState(false);
+    const [newText, setNewText] = useState("");
 
     const addTask = (todo) => {
         if (!todo.text || /^\s*$/.test(todo.text)) {
@@ -24,16 +26,6 @@ const Todo = () => {
         setTodos(removeTodo);
     };
 
-    const updateTodo = (todoId, newValue) => {
-        if (!newValue.text || /^\s*$/.test(newValue.text)) {
-            return;
-        }
-
-        setTodos((prev) =>
-            prev.map((item) => (item.id === todoId ? newValue : item))
-        );
-    };
-
     const completeTodo = (id) => {
         let updatedTodos = todos.map((todo) => {
             if (todo.id === id) {
@@ -44,19 +36,66 @@ const Todo = () => {
         setTodos(updatedTodos);
     };
 
+    const handleChange = (e) => {
+        setNewText(e.target.value);
+        console.log(newText)
+    };
+
+    const update = (e) => {
+        e.preventDefault();
+        const editText = todos.map((todo) => {
+            if (todo.edit) {
+                console.log("Value of new text", newText)
+                todo.text = newText;
+                todo.edit = false
+                
+            }
+            setNewText("")
+            return todo;
+            
+        });
+
+        setTodos(editText);
+    };
+
+    const handleEdit = (id) => {
+        setEdit(true);
+        console.log(edit);
+        const editTodo = todos.map((todo) => {
+            if (todo.id === id) {
+                todo.edit = !todo.edit;
+            }
+            console.log(todo)
+            setEdit(!edit)
+            console.log(todo)
+            return todo;
+        });
+
+        setTodos(editTodo);
+    };
+
     const allTodos = todos.map((todo) => (
         <div
             className={todo.isComplete ? "todo complete" : "todo"}
             key={todo.id}
         >
-            <div onClick={() => completeTodo(todo.id)}>{todo.text}</div>
+            <div onClick={() => completeTodo(todo.id)}>
+                {todo.edit ? (
+                    <form onSubmit={update}>
+                        <input className="edit-input" placeholder="Edit task" value={newText} onChange={handleChange} />
+                        <button className="edit-button" type="submit">✓</button>
+                    </form>
+                ) : (
+                    todo.text
+                )}
+            </div>
 
             <div className="todo-icons">
                 <div>
                     <RiCloseCircleLine onClick={() => remove(todo.id)} />
                 </div>
                 <div>
-                    <TiEdit onClick={() => updateTodo(todo.id)} />
+                    <TiEdit onClick={() => handleEdit(todo.id)} />
                 </div>
             </div>
         </div>
