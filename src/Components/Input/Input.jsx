@@ -32,7 +32,7 @@ const Input = (props) => {
                     id="name"
                     name="name"
                 />
-                <Button type="submit" />
+                <Button type="submit" buttontext="Add Task"/>
             </form>
         </div>
     );

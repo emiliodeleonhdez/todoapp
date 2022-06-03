@@ -1,8 +1,9 @@
 import React from 'react'
+import "./Button.scss"
 
 const Button = (props) => {
   return (
-    <button type={props.type}>Click Me!</button>
+    <button className='button-add-task' type={props.type}>{props.buttontext}</button>
   )
 }
 
